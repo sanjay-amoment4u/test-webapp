@@ -1,0 +1,11 @@
+<web-app>
+	<servlet>
+		<servlet-name>ServletEx</servlet-name>
+		<servlet-class>com.ratan.controller.TestServlet</servlet-class>		
+	</servlet>
+		
+	<servlet-mapping>
+		<servlet-name>ServletEx</servlet-name>
+		<url-pattern>/firstServlet</url-pattern>
+	</servlet-mapping>
+</web-app> 
