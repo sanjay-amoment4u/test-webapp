@@ -5,10 +5,14 @@
 	<property name="src.web.ui.dir" value="src/ui/jsps"/>
 	<property name="lib.dir" value="thirdparty/lib"/>	
 	<property name="dd.dir" value="src/dd"/>
+	<property name="propertyfiles.dir" value="src/propertyfiles"/>
 	<property name="build.dir" value="build"/>
 	<property name="classes.dir" value="${build.dir}/classes"/>			
 	<property name="war.dir" value="${build.dir}/war"/>		
-	<property name="deploy.dir" value="C:/Personal/Softwares/jboss-5.0.1.GA/server/default/deploy"/>
+	
+	<!-- NOTE: The below property value should be modified for automatic deployment 
+	as per the server's deployment directory path. -->
+	<property name="deploy.dir" value="C:/apache-tomcat-7.0.53/webapps"/>
 	    
     <target name="clean">
     	<echo message="Deleting the existing class files and folders under - /${build.dir}"/>
@@ -16,23 +20,29 @@
     </target>
 		
     <path id="classpath">
-        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>				
     </path>
 
+	<!-- Compiling Java files / codes -->
     <target name="compile">
         <mkdir dir="${classes.dir}"/>
         <echo message="Compiling Java files under - /${lib.dir}"/>
         <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" includeantruntime="false"/>
     </target>
 
+	<!-- Building war file -->
     <target name="build.war" depends="compile">      		
     	<mkdir dir="${war.dir}"/>
     	<echo message="Creating War file under - /${war.dir}"/>
+		<copy todir="${classes.dir}" overwrite="yes">
+      		<fileset dir="${propertyfiles.dir}" includes="*.properties"/>        		
+        </copy> 
+		
 		<war destfile="${war.dir}/${ant.project.name}.war" webxml="${dd.dir}/web.xml">
             <fileset dir="${src.web.ui.dir}" includes="index.jsp" casesensitive="yes"/>                        
-			<zipfileset dir="${src.web.ui.dir}" prefix="WEB-INF/ui/jsps" includes="**/*" excludes="index.jsp"/>                    
+			<zipfileset dir="${src.web.ui.dir}" prefix="WEB-INF/ui/jsps" includes="**/*" excludes="index.jsp"/>	 			
             <classes dir="${classes.dir}"/> 
-			<lib dir="${lib.dir}" excludes="j2ee.jar,log4j-1.2.9.jar" />		    				
+			<lib dir="${lib.dir}"/>					
         </war>        			
 	</target>
 	
@@ -40,6 +50,7 @@
     	<echo message="Build Completed!"/>      	           	    
     </target> 
 	
+	<!-- Deploying the war file (copying / replacing the war file in the server's deployment folder) -->
 	<target name="deploy.app" depends="build.war">        
         <copy todir="${deploy.dir}" overwrite="yes">
       		<fileset dir="${war.dir}" casesensitive="yes">

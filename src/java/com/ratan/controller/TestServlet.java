@@ -1,5 +1,11 @@
 package com.ratan.controller;
 
+/**
+ * 
+ * @author Sanjay.Ratan
+ * 
+ */
+ 
 import java.io.IOException;
 import java.io.PrintWriter;
  
@@ -9,24 +15,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.util.Date;
-import org.apache.log4j.Logger;
-import org.apache.log4j.BasicConfigurator;
 import java.util.Vector;
 
 import com.ratan.common.*;
 
+/**
+ * Servlet implementation class TestServlet
+ */
 public class TestServlet extends HttpServlet
 {
-	static Logger logger = Logger.getLogger(TestServlet.class);
-
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
+	{
 		doPost(req, resp);
 	}
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		BasicConfigurator.configure();
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	{		
 		DBHelper dbh = new DBHelper();		
 		
-		logger.info("Welcome to Global Automation ("+new Date()+")!!");
+		System.out.println("Welcome to Global Automation ("+new Date()+")!!");
 		Vector vOut = dbh.getResult(request.getParameter("txtEmpName"));
 		
 		PrintWriter pw = response.getWriter();
@@ -50,7 +56,8 @@ public class TestServlet extends HttpServlet
 		}		
 		catch(Exception e)
 		{			
-			logger.fatal("Exception Occured in Controller! - "+e.getMessage());
+			System.out.println("Exception Occurred in Controller! - "+e.getMessage());
+			e.printStackTrace();
 		}		
 	}	
 }
